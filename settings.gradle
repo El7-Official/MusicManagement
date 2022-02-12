@@ -1,0 +1,3 @@
+rootProject.name = "MusicManagement"
+include ':app'
+include ':core'
