@@ -8,8 +8,9 @@ import com.factory.appsfactory.challenge.framework.db.models.Album as DbAlbum
 import com.factory.appsfactory.core.domain.AlbumDetails
 import com.factory.appsfactory.core.domain.Artist
 import com.factory.appsfactory.core.domain.Track
+import javax.inject.Inject
 
-class AlbumDataSourceImp(
+class AlbumDataSourceImp @Inject constructor (
     private val albumDAO: AlbumDao,
     private val artistDao: ArtistDao
 ) : LocalAlbumDataSource {
