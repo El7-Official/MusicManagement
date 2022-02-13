@@ -3,8 +3,9 @@ package com.factory.appsfactory.challenge.framework.network.repository
 import com.factory.appsfactory.challenge.framework.network.api.LastFMService
 import com.factory.appsfactory.core.data.ArtistDataSource
 import com.factory.appsfactory.core.domain.Artist
+import javax.inject.Inject
 
-class ArtistDataSourceImp (
+class ArtistDataSourceImp @Inject constructor(
     private val lastFMService: LastFMService
 ): ArtistDataSource {
 

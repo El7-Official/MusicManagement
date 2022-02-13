@@ -19,12 +19,6 @@ object CacheModule {
 
     @Provides
     @Singleton
-    fun provideRoomDatabase(@ApplicationContext context: Context): LastFMDatabase {
-        return LastFMDatabase.getInstance(context)
-    }
-
-    @Provides
-    @Singleton
     fun provideArtistDao(lastFMDatabase: LastFMDatabase): ArtistDao {
         return lastFMDatabase.artistDao()
     }
@@ -37,7 +31,7 @@ object CacheModule {
 
     @Provides
     @Singleton
-    fun provideCharacterCache(albumDataSourceImp: AlbumDataSourceImp): LocalAlbumDataSource {
-        return albumDataSourceImp
+    fun provideRoomDatabase(@ApplicationContext context: Context): LastFMDatabase {
+        return LastFMDatabase.getInstance(context)
     }
 }

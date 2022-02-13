@@ -11,7 +11,6 @@ import com.factory.appsfactory.challenge.framework.db.models.Artist
 import com.factory.appsfactory.challenge.framework.db.models.Track
 import com.factory.appsfactory.challenge.framework.db.utils.DbConstants
 import com.factory.appsfactory.challenge.framework.db.utils.Migrations
-import javax.inject.Inject
 
 
 @Database(
@@ -19,7 +18,7 @@ import javax.inject.Inject
     version = Migrations.DB_VERSION,
     exportSchema = false
 )
-abstract class LastFMDatabase @Inject constructor() : RoomDatabase() {
+abstract class LastFMDatabase: RoomDatabase() {
 
     abstract fun albumDao(): AlbumDao
 

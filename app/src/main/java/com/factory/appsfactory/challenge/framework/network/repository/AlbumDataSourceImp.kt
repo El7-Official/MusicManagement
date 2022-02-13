@@ -6,8 +6,9 @@ import com.factory.appsfactory.core.domain.Album
 import com.factory.appsfactory.core.domain.AlbumDetails
 import com.factory.appsfactory.core.domain.Artist
 import com.factory.appsfactory.core.domain.Track
+import javax.inject.Inject
 
-class AlbumDataSourceImp(
+class AlbumDataSourceImp @Inject constructor(
     private val lastFMService: LastFMService
 ) : RemoteAlbumDataSource {
 
