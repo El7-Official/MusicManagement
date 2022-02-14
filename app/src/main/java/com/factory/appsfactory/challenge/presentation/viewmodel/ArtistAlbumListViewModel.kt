@@ -7,6 +7,7 @@ import com.factory.appsfactory.challenge.presentation.utils.UiAwareModel
 import com.factory.appsfactory.core.domain.Album
 import com.factory.appsfactory.core.domain.Artist
 import com.factory.appsfactory.core.interactors.GetArtistAlbumsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import javax.inject.Inject
 
@@ -16,6 +17,7 @@ sealed class ArtistAlbumListUIModel : UiAwareModel() {
     data class Success(val data: List<Album>) : ArtistAlbumListUIModel()
 }
 
+@HiltViewModel
 class ArtistAlbumListViewModel @Inject constructor(
     contextProvider: CoroutineContextProvider,
     private val getArtistAlbumsUseCase: GetArtistAlbumsUseCase
