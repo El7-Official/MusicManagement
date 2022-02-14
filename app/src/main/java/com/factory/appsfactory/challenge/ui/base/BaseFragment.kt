@@ -1,4 +1,4 @@
-package com.factory.appsfactory.challenge.presentation.base
+package com.factory.appsfactory.challenge.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +23,11 @@ abstract class BaseFragment<VB : ViewBinding, ViewModel : BaseViewModel> : Fragm
         super.onCreateView(inflater, container, savedInstanceState)
         binding = getViewBinding()
         return binding.root
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handleLoading(false)
     }
 
     protected open fun handleLoading(isLoading: Boolean) {
