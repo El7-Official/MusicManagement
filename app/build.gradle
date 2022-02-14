@@ -19,7 +19,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // Configs
-        buildConfigField("String", "BASE_URL", "\"http://ws.audioscrobbler.com/2.0/\"")
+        buildConfigField("String", "BASE_URL", "\"https://ws.audioscrobbler.com/2.0/\"")
+        buildConfigField("String", "API_KEY", "\"906b4c9021738806224e83905febd673\"")
 
         javaCompileOptions {
             annotationProcessorOptions {
