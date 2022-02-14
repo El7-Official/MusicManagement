@@ -16,7 +16,7 @@ class AlbumDataSourceImp @Inject constructor (
 ) : LocalAlbumDataSource {
 
     override suspend fun addAlbum(album: Album, artist: Artist) {
-        artist.takeIf { it.id.isNotEmpty() }?.apply {
+        takeIf { album.id.isNotEmpty() && artist.id.isNotEmpty() }?.apply {
             albumDAO.addAlbum(
                 DbAlbum(
                     album.id,
@@ -24,7 +24,7 @@ class AlbumDataSourceImp @Inject constructor (
                     album.url,
                     album.thumbnail,
                     album.playCount,
-                    this.id
+                    artist.id
                 )
             )
         }
@@ -47,7 +47,7 @@ class AlbumDataSourceImp @Inject constructor (
     }
 
     override suspend fun removeAlbum(album: Album, artist: Artist) {
-        artist.takeIf { it.id.isNotEmpty() }?.apply {
+        takeIf { artist.id.isNotEmpty() && album.id.isNotEmpty() }?.apply {
             albumDAO.deleteAlbum(
                 DbAlbum(
                     album.id,
@@ -55,7 +55,7 @@ class AlbumDataSourceImp @Inject constructor (
                     album.url,
                     album.thumbnail,
                     album.playCount,
-                    this.id
+                    artist.id
                 )
             )
         }
@@ -66,33 +66,39 @@ class AlbumDataSourceImp @Inject constructor (
     }
 
     override suspend fun getAlbumDetails(album: Album, artist: Artist): AlbumDetails? {
-        var artistItem: Artist?
-        var albumItem: Album?
-        var tracks: List<Track>
-        return artistDao.getArtistWithAlbums(artist.id)?.let {
-            artistItem = Artist(
-                it.artist.ref,
-                it.artist.name,
-                it.artist.url,
-                it.artist.thumbnail
-            )
-            it.albums.firstOrNull { it.ref == album.id }?.let { _album ->
-                albumItem = Album(
-                    _album.ref,
-                    _album.name,
-                    _album.url,
-                    _album.thumbnail,
-                    _album.playCount
+        // Verify if album contains mbid
+        // if empty return null
+            // else
+                // Get all albums & get album id == album param id
+                    // Export artist id from album item
+                        // Get artist details
+                    // get album tracks
+        return takeIf { album.id.isNotEmpty() }?.let {
+            albumDAO.getAlbums().firstOrNull { it.ref == album.id }?.let { dbAlbum ->
+                val albumItem = Album(
+                    dbAlbum.ref,
+                    dbAlbum.name,
+                    dbAlbum.url,
+                    dbAlbum.thumbnail,
+                    dbAlbum.playCount
                 )
-                tracks = albumDAO.getAlbumWithTracks(_album.ref)?.tracks?.map { _track ->
+                val dbArtistItem = artistDao.getArtistByRef(dbAlbum.ref)
+                val artistItem = with(dbArtistItem) {
+                    Artist(
+                        this?.ref ?: dbAlbum.artistId,
+                        this?.name ?: "",
+                        this?.url ?: "",
+                        this?.thumbnail ?: ""
+                    )
+                }
+                val tracks = albumDAO.getAlbumWithTracks(albumItem.id)?.tracks?.map { dbTrack ->
                     Track(
-                        _track.name,
-                        _track.url,
-                        _track.duration
+                        dbTrack.name,
+                        dbTrack.url,
+                        dbTrack.duration
                     )
                 } ?: emptyList()
-
-                AlbumDetails(albumItem!!, artistItem!!, tracks)
+                AlbumDetails(albumItem, artistItem, tracks)
             }
         }
     }
