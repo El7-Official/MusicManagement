@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/album_list_fragment">
+
+    <fragment
+        android:id="@+id/album_list_fragment"
+        android:name="com.factory.appsfactory.challenge.ui.albumlist.AlbumListFragment"
+        android:label="@string/title_album_list_frag"
+        tools:layout="@layout/fragment_album_list">
+        <action
+            android:id="@+id/action_album_list_fragment_to_album_details_fragment"
+            app:destination="@id/album_details_fragment"
+            app:popUpTo="@+id/main_nav_graph"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_album_list_fragment_to_artist_list_fragment"
+            app:destination="@id/artist_list_fragment"
+            app:popUpTo="@+id/main_nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/artist_list_fragment"
+        android:name="com.factory.appsfactory.challenge.ui.artistlist.ArtistListFragment"
+        android:label="@string/title_artist_list_frag"
+        tools:layout="@layout/fragment_artist_list">
+
+        <action
+            android:id="@+id/action_artist_list_fragment_to_top_albums_fragment"
+            app:destination="@id/top_albums_fragment"
+            app:popUpTo="@+id/main_nav_graph"
+            app:popUpToInclusive="true"/>
+        <argument
+            android:name="artistName"
+            app:argType="string"
+            android:defaultValue=""/>
+    </fragment>
+    <fragment
+        android:id="@+id/top_albums_fragment"
+        android:name="com.factory.appsfactory.challenge.ui.topalbums.TopAlbumsFragment"
+        android:label="@string/title_top_albums_frag"
+        tools:layout="@layout/fragment_top_albums">
+
+        <action
+            android:id="@+id/action_top_albums_fragment_to_album_details_fragment"
+            app:destination="@id/album_details_fragment"
+            app:popUpTo="@+id/main_nav_graph"
+            app:popUpToInclusive="true"/>
+        <argument
+            android:name="artist"
+            app:argType="com.factory.appsfactory.core.domain.Artist"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/album_details_fragment"
+        android:name="com.factory.appsfactory.challenge.ui.albumdetails.AlbumDetailsFragment"
+        android:label="@string/title_album_details_frag"
+        tools:layout="@layout/fragment_album_details">
+
+        <argument
+            android:name="fromCache"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="artist"
+            app:argType="com.factory.appsfactory.core.domain.Artist"
+            app:nullable="true" />
+        <argument
+            android:name="album"
+            app:argType="com.factory.appsfactory.core.domain.Album"
+            app:nullable="true" />
+    </fragment>
+</navigation>

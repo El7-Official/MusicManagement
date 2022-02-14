@@ -75,6 +75,9 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.38.1"
     // JavaX
     implementation "javax.inject:javax.inject:1"
+    // Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
     implementation project(':core')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
