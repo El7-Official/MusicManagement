@@ -34,4 +34,10 @@ object CacheModule {
     fun provideRoomDatabase(@ApplicationContext context: Context): LastFMDatabase {
         return LastFMDatabase.getInstance(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideAlbumDataSource(albumDataSourceImp: AlbumDataSourceImp): LocalAlbumDataSource {
+        return albumDataSourceImp
+    }
 }

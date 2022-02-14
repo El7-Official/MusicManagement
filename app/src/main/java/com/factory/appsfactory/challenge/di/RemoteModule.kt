@@ -13,7 +13,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteModule {
@@ -22,5 +21,17 @@ object RemoteModule {
     @Singleton
     fun provideLastFMService(): LastFMService {
         return RetrofitFactory.create(BuildConfig.DEBUG, BuildConfig.BASE_URL)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlbumDataSource(albumDataSourceImp: AlbumDataSourceImp): RemoteAlbumDataSource {
+        return albumDataSourceImp
+    }
+
+    @Provides
+    @Singleton
+    fun provideArtistDataSource(artistDataSourceImp: ArtistDataSourceImp): ArtistDataSource {
+        return artistDataSourceImp
     }
 }

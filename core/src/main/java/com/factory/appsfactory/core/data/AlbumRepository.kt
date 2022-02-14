@@ -6,8 +6,9 @@ import com.factory.appsfactory.core.domain.Album
 import com.factory.appsfactory.core.domain.AlbumDetails
 import com.factory.appsfactory.core.domain.Artist
 import com.factory.appsfactory.core.domain.Track
+import javax.inject.Inject
 
-class AlbumRepository(
+class AlbumRepository @Inject constructor(
     var localAlbumDataSource: LocalAlbumDataSource,
     var remoteAlbumDataSource: RemoteAlbumDataSource
     ) {
@@ -22,7 +23,7 @@ class AlbumRepository(
         return remoteAlbumDataSource.getAlbumsByArtist(artist)
     }
 
-    suspend fun getAlbumDetails(fromCache: Boolean, album: Album, artist: Artist): AlbumDetails {
+    suspend fun getAlbumDetails(fromCache: Boolean, album: Album, artist: Artist): AlbumDetails? {
         return if (fromCache) {
             localAlbumDataSource.getAlbumDetails(album, artist)
         } else {
