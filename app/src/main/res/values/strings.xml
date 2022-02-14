@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MusicManagement</string>
+
+    <string name="title_album_list_frag">Albums</string>
+    <string name="title_artist_list_frag">Artists</string>
+    <string name="title_top_albums_frag">Top Albums</string>
+    <string name="title_album_details_frag">Album Details</string>
 </resources>
