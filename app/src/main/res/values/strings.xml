@@ -5,4 +5,10 @@
     <string name="title_artist_list_frag">Artists</string>
     <string name="title_top_albums_frag">Top Albums</string>
     <string name="title_album_details_frag">Album Details</string>
+
+    <string name="album_details_album_name_hint">Album name</string>
+    <string name="album_details_album_playcount_hint">Play count</string>
+    <string name="album_details_album_url_hint">Link</string>
+    <string name="album_details_album_tracks_hint">Track</string>
+
 </resources>
