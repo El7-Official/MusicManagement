@@ -65,10 +65,6 @@
             app:argType="boolean"
             android:defaultValue="false" />
         <argument
-            android:name="artist"
-            app:argType="com.factory.appsfactory.core.domain.Artist"
-            app:nullable="true" />
-        <argument
             android:name="album"
             app:argType="com.factory.appsfactory.core.domain.Album"
             app:nullable="true" />

@@ -16,4 +16,5 @@
 
     <string name="msg_success_out_of_favorite">Album removed successfully</string>
     <string name="msg_failed_out_of_favorite">Error occurred while removing album</string>
+    <string name="action_search">search</string>
 </resources>
