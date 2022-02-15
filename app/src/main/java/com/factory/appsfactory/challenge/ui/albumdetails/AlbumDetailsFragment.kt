@@ -1,19 +1,21 @@
 package com.factory.appsfactory.challenge.ui.albumdetails
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
-import com.factory.appsfactory.challenge.databinding.FragmentTopAlbumsBinding
+import androidx.navigation.fragment.navArgs
+import com.factory.appsfactory.challenge.databinding.FragmentAlbumDetailsBinding
 import com.factory.appsfactory.challenge.presentation.extensions.observe
 import com.factory.appsfactory.challenge.presentation.viewmodel.*
 import com.factory.appsfactory.challenge.ui.base.BaseFragment
+import com.factory.appsfactory.core.domain.AlbumDetails
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AlbumDetailsFragment : BaseFragment<FragmentTopAlbumsBinding, BaseViewModel>() {
+class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewModel>() {
 
-    override fun getViewBinding() = FragmentTopAlbumsBinding.inflate(layoutInflater)
+    private val args: AlbumDetailsFragmentArgs by navArgs()
+    override fun getViewBinding() = FragmentAlbumDetailsBinding.inflate(layoutInflater)
 
     override val viewModel: AlbumDetailsViewModel by viewModels()
 
@@ -21,14 +23,23 @@ class AlbumDetailsFragment : BaseFragment<FragmentTopAlbumsBinding, BaseViewMode
         super.onViewCreated(view, savedInstanceState)
         initUI()
         observeVM()
+        fetchData(args)
+    }
+
+    private fun initUI() {
+
     }
 
     private fun observeVM() {
         observe(viewModel.getAlbumListLiveData(), ::onViewStateChange)
     }
 
-    private fun initUI() {
-
+    private fun fetchData(args: AlbumDetailsFragmentArgs) {
+        args.album?.let { album ->
+            args.artist?.let { artist ->
+            viewModel.getAlbumDetails(args.fromCache, artist, album)
+            }
+        } ?: handleEmptyData()
     }
 
     private fun onViewStateChange(event: AlbumDetailsUIModel) {
@@ -39,9 +50,25 @@ class AlbumDetailsFragment : BaseFragment<FragmentTopAlbumsBinding, BaseViewMode
             is AlbumDetailsUIModel.Success -> {
                 handleLoading(false)
                 event.data.let {
-                    Log.e("TAG_BASE", "onViewStateChange-it: $it")
+                    it?.let {
+                        matchDataToUI(it)
+                    } ?: handleEmptyData()
                 }
             }
         }
+    }
+
+    private fun matchDataToUI(albumDetails: AlbumDetails) {
+        with(binding.includeItemDetails) {
+            txtViewArtistName.text = albumDetails.artist.name
+            txtViewAlbumNameContent.text = albumDetails.album.name
+            txtViewPlayCountContent.text = albumDetails.album.playCount.toString()
+            txtViewLinkLabel.text = albumDetails.album.url
+            txtViewTrackContent.text = albumDetails.tracks.takeIf { it.isNotEmpty() }?.joinToString(separator = " \t-\t ") ?: ""
+        }
+    }
+
+    private fun handleEmptyData() {
+
     }
 }

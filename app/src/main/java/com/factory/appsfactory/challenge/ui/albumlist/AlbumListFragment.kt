@@ -1,19 +1,24 @@
 package com.factory.appsfactory.challenge.ui.albumlist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.factory.appsfactory.challenge.databinding.FragmentAlbumListBinding
 import com.factory.appsfactory.challenge.presentation.extensions.observe
 import com.factory.appsfactory.challenge.presentation.viewmodel.AlbumListUIModel
 import com.factory.appsfactory.challenge.presentation.viewmodel.AlbumListViewModel
 import com.factory.appsfactory.challenge.presentation.viewmodel.BaseViewModel
 import com.factory.appsfactory.challenge.ui.base.BaseFragment
+import com.factory.appsfactory.core.domain.Artist
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AlbumListFragment : BaseFragment<FragmentAlbumListBinding, BaseViewModel>() {
+
+    lateinit var albumAdapter: AlbumAdapter
 
     override fun getViewBinding() = FragmentAlbumListBinding.inflate(layoutInflater)
 
@@ -30,7 +35,41 @@ class AlbumListFragment : BaseFragment<FragmentAlbumListBinding, BaseViewModel>(
     }
 
     private fun initUI() {
+        setUIListener()
+        initRecyclerView()
+    }
 
+    private fun initRecyclerView() {
+        albumAdapter = AlbumAdapter()
+        binding.recyclerViewAlbums.apply {
+            adapter = albumAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        albumAdapter.setItemClickListener { album ->
+            findNavController().navigate(
+                AlbumListFragmentDirections.actionAlbumListFragmentToAlbumDetailsFragment(
+                    true,
+                    Artist("", "", "", ""),
+                    album
+                )
+            )
+        }
+    }
+
+    private fun setUIListener() {
+        binding.searchViewArtist.apply {
+            setIconifiedByDefault(false)
+            setOnClickListener {
+                if (this.query.toString().isNotEmpty()) {
+                    findNavController().navigate(
+                        AlbumListFragmentDirections.actionAlbumListFragmentToArtistListFragment(
+                            this.query.toString()
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private fun onViewStateChange(event: AlbumListUIModel) {
@@ -41,7 +80,7 @@ class AlbumListFragment : BaseFragment<FragmentAlbumListBinding, BaseViewModel>(
             is AlbumListUIModel.Success -> {
                 handleLoading(false)
                 event.data.let {
-                    Log.e("TAG_BASE", "onViewStateChange-it: $it")
+                    albumAdapter.list = it
                 }
             }
         }

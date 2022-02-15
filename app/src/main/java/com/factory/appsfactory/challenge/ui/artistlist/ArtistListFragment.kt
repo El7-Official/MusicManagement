@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.factory.appsfactory.challenge.databinding.FragmentArtistListBinding
 import com.factory.appsfactory.challenge.ui.base.BaseFragment
 import com.factory.appsfactory.challenge.presentation.extensions.observe
@@ -15,6 +18,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ArtistListFragment : BaseFragment<FragmentArtistListBinding, BaseViewModel>() {
 
+    private val args: ArtistListFragmentArgs by navArgs()
+    lateinit var artistAdapter: ArtistAdapter
+
     override fun getViewBinding(): FragmentArtistListBinding =
         FragmentArtistListBinding.inflate(layoutInflater)
 
@@ -22,17 +28,37 @@ class ArtistListFragment : BaseFragment<FragmentArtistListBinding, BaseViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getArtistsByName("Akon")
         initUI()
         observeVM()
+        fetchData(args)
+    }
+
+    private fun initUI() {
+        initRecyclerView()
     }
 
     private fun observeVM() {
         observe(viewModel.getArtistsLiveData(), ::onViewStateChange)
     }
 
-    private fun initUI() {
+    private fun fetchData(args: ArtistListFragmentArgs) {
+        viewModel.getArtistsByName(args.artistName)
+    }
 
+    private fun initRecyclerView() {
+        artistAdapter = ArtistAdapter()
+        binding.recyclerViewArtists.apply {
+            adapter = artistAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        artistAdapter.setItemClickListener { artist ->
+            findNavController().navigate(
+                ArtistListFragmentDirections.actionArtistListFragmentToTopAlbumsFragment(
+                    artist
+                )
+            )
+        }
     }
 
     private fun onViewStateChange(event: ArtistUIModel) {
@@ -43,7 +69,7 @@ class ArtistListFragment : BaseFragment<FragmentArtistListBinding, BaseViewModel
             is ArtistUIModel.Success -> {
                 handleLoading(false)
                 event.data.let {
-                    Log.e("TAG_BASE", "onViewStateChange-it: ${it.toString()}")
+                    artistAdapter.list = it
                 }
             }
         }
