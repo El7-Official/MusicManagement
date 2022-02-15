@@ -28,15 +28,20 @@ class AlbumListFragment : BaseFragment<FragmentAlbumListBinding, BaseViewModel>(
         super.onViewCreated(view, savedInstanceState)
         initUI()
         observeVM()
+        fetchData()
+    }
+
+    private fun initUI() {
+        setUIListener()
+        initRecyclerView()
     }
 
     private fun observeVM() {
         observe(viewModel.getAlbumListLiveData(), ::onViewStateChange)
     }
 
-    private fun initUI() {
-        setUIListener()
-        initRecyclerView()
+    private fun fetchData() {
+        viewModel.getAlbumList()
     }
 
     private fun initRecyclerView() {
