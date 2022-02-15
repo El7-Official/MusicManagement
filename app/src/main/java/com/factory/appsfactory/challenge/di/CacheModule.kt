@@ -3,7 +3,6 @@ package com.factory.appsfactory.challenge.di
 import android.content.Context
 import com.factory.appsfactory.challenge.framework.db.LastFMDatabase
 import com.factory.appsfactory.challenge.framework.db.dao.AlbumDao
-import com.factory.appsfactory.challenge.framework.db.dao.ArtistDao
 import com.factory.appsfactory.challenge.framework.db.repository.AlbumDataSourceImp
 import com.factory.appsfactory.core.data.local.LocalAlbumDataSource
 import dagger.Module
