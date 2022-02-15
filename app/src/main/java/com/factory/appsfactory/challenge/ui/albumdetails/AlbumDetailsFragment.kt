@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.factory.appsfactory.challenge.R
 import com.factory.appsfactory.challenge.databinding.FragmentAlbumDetailsBinding
 import com.factory.appsfactory.challenge.presentation.extensions.observe
+import com.factory.appsfactory.challenge.presentation.extensions.showSnackBar
 import com.factory.appsfactory.challenge.presentation.viewmodel.*
 import com.factory.appsfactory.challenge.ui.base.BaseFragment
 import com.factory.appsfactory.core.domain.AlbumDetails
@@ -22,12 +24,20 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()
+        setUIListener()
         observeVM()
         fetchData(args)
     }
 
     private fun initUI() {
 
+    }
+
+    private fun setUIListener() {
+        binding.includeItemDetails.checkboxFavourite.setOnCheckedChangeListener { view, isChecked ->
+            if (isChecked) handleAddAlbum(args)
+            else handleDeleteAlbum(args)
+        }
     }
 
     private fun observeVM() {
@@ -37,9 +47,25 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
     private fun fetchData(args: AlbumDetailsFragmentArgs) {
         args.album?.let { album ->
             args.artist?.let { artist ->
-            viewModel.getAlbumDetails(args.fromCache, artist, album)
+                viewModel.getAlbumDetails(args.fromCache, artist, album)
             }
         } ?: handleEmptyData()
+    }
+
+    private fun handleAddAlbum(args: AlbumDetailsFragmentArgs) {
+        args.artist?.let { artist ->
+            args.album?.let { album ->
+                viewModel.addAlbumInFavourite(album, artist)
+            }
+        }
+    }
+
+    private fun handleDeleteAlbum(args: AlbumDetailsFragmentArgs) {
+        args.artist?.let { artist ->
+            args.album?.let { album ->
+                viewModel.removeAlbumFromFavourite(album, artist)
+            }
+        }
     }
 
     private fun onViewStateChange(event: AlbumDetailsUIModel) {
@@ -55,6 +81,22 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
                     } ?: handleEmptyData()
                 }
             }
+            is AlbumDetailsUIModel.FavoriteStatus -> {
+                when (event.favorite) {
+                    Favorite.IN_FAVORITE ->
+                        if (event.status) {
+                            showSnackBar(binding.root, getString(R.string.msg_success_add_to_favorite))
+                        } else {
+                            handleErrorMessage(getString(R.string.msg_failed_add_to_favorite))
+                        }
+                    Favorite.OUT_FAVOURITE ->
+                        if (event.status) {
+                            showSnackBar(binding.root, getString(R.string.msg_success_out_of_favorite))
+                        } else {
+                            handleErrorMessage(getString(R.string.msg_failed_out_of_favorite))
+                        }
+                }
+            }
         }
     }
 
@@ -64,7 +106,9 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
             txtViewAlbumNameContent.text = albumDetails.album.name
             txtViewPlayCountContent.text = albumDetails.album.playCount.toString()
             txtViewLinkLabel.text = albumDetails.album.url
-            txtViewTrackContent.text = albumDetails.tracks.takeIf { it.isNotEmpty() }?.joinToString(separator = " \t-\t ") ?: ""
+            txtViewTrackContent.text =
+                albumDetails.tracks.takeIf { it.isNotEmpty() }?.joinToString(separator = " \t-\t ")
+                    ?: ""
         }
     }
 

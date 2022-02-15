@@ -7,7 +7,9 @@ import com.factory.appsfactory.challenge.presentation.utils.UiAwareModel
 import com.factory.appsfactory.core.domain.Album
 import com.factory.appsfactory.core.domain.AlbumDetails
 import com.factory.appsfactory.core.domain.Artist
+import com.factory.appsfactory.core.interactors.DeleteAlbumUseCase
 import com.factory.appsfactory.core.interactors.GetAlbumDetailsUseCase
+import com.factory.appsfactory.core.interactors.SaveAlbumUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import javax.inject.Inject
@@ -16,12 +18,22 @@ sealed class AlbumDetailsUIModel : UiAwareModel() {
     object Loading : AlbumDetailsUIModel()
     data class Error(var error: String = "") : AlbumDetailsUIModel()
     data class Success(val data: AlbumDetails?) : AlbumDetailsUIModel()
+    data class FavoriteStatus(val favorite: Favorite, val status: Boolean) :
+        AlbumDetailsUIModel()
 }
+
+enum class Favorite {
+    IN_FAVORITE,
+    OUT_FAVOURITE
+}
+
 
 @HiltViewModel
 class AlbumDetailsViewModel @Inject constructor(
     contextProvider: CoroutineContextProvider,
-    private val getAlbumDetailsUseCase: GetAlbumDetailsUseCase
+    private val getAlbumDetailsUseCase: GetAlbumDetailsUseCase,
+    private val saveAlbumUseCase: SaveAlbumUseCase,
+    private val deleteAlbumUseCase: DeleteAlbumUseCase
 ) : BaseViewModel(contextProvider) {
 
     private val _albumDetails = UiAwareLiveData<AlbumDetailsUIModel>()
@@ -39,6 +51,32 @@ class AlbumDetailsViewModel @Inject constructor(
         _albumDetails.postValue(AlbumDetailsUIModel.Loading)
         launchCoroutineIO {
             loadAlbumDetails(fromCache, artist, album)
+        }
+    }
+
+    fun addAlbumInFavourite(album: Album, artist: Artist) {
+        launchCoroutineIO {
+            saveAlbumUseCase(album, artist).let {
+                _albumDetails.postValue(
+                    AlbumDetailsUIModel.FavoriteStatus(
+                        Favorite.IN_FAVORITE,
+                        it
+                    )
+                )
+            }
+        }
+    }
+
+    fun removeAlbumFromFavourite(album: Album, artist: Artist) {
+        launchCoroutineIO {
+            deleteAlbumUseCase(album, artist).let {
+                _albumDetails.postValue(
+                    AlbumDetailsUIModel.FavoriteStatus(
+                        Favorite.OUT_FAVOURITE,
+                        it
+                    )
+                )
+            }
         }
     }
 

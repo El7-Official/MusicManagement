@@ -13,8 +13,8 @@ class AlbumRepository @Inject constructor(
     var remoteAlbumDataSource: RemoteAlbumDataSource
     ) {
 
-    suspend fun addAlbum(album: Album, artist: Artist) {
-        localAlbumDataSource.addAlbum(album, artist)
+    suspend fun addAlbum(album: Album, artist: Artist): Boolean {
+        return localAlbumDataSource.addAlbum(album, artist)
     }
 
     suspend fun getAlbums(): List<Album> = localAlbumDataSource.getAlbums()
@@ -33,7 +33,7 @@ class AlbumRepository @Inject constructor(
 
     suspend fun isAlbumBookmarked(album: Album): Boolean = localAlbumDataSource.isAlbumBookmarked(album)
 
-    suspend fun removeAlbum(album: Album, artist: Artist) = localAlbumDataSource.removeAlbum(album, artist)
+    suspend fun removeAlbum(album: Album, artist: Artist): Boolean = localAlbumDataSource.removeAlbum(album, artist)
 
     suspend fun updateAlbumTracks(album: Album, track: Track) {
         return localAlbumDataSource.updateAlbumTracks(album, track)

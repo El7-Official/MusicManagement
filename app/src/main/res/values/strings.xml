@@ -11,4 +11,9 @@
     <string name="album_details_album_url_hint">Link</string>
     <string name="album_details_album_tracks_hint">Track</string>
 
+    <string name="msg_success_add_to_favorite">Album added successfully</string>
+    <string name="msg_failed_add_to_favorite">Error occurred while adding album</string>
+
+    <string name="msg_success_out_of_favorite">Album removed successfully</string>
+    <string name="msg_failed_out_of_favorite">Error occurred while removing album</string>
 </resources>

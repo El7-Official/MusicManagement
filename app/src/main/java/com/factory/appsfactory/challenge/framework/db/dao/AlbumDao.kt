@@ -11,10 +11,10 @@ interface AlbumDao {
     fun getAlbums(): List<Album>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addAlbum(album: Album)
+    fun addAlbum(album: Album): Long
 
     @Delete
-    fun deleteAlbum(album: Album)
+    fun deleteAlbum(album: Album): Int
 
     @Transaction
     @Query("SELECT * FROM albums WHERE ref=:ref")

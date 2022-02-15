@@ -6,7 +6,7 @@ import com.factory.appsfactory.core.domain.Artist
 import javax.inject.Inject
 
 class DeleteAlbumUseCase @Inject constructor (private val albumRepository: AlbumRepository) {
-    suspend operator fun invoke(album: Album, artist: Artist) {
-        albumRepository.removeAlbum(album, artist)
+    suspend operator fun invoke(album: Album, artist: Artist): Boolean {
+        return albumRepository.removeAlbum(album, artist)
     }
 }

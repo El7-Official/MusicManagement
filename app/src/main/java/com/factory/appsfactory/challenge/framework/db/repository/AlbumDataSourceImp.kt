@@ -5,19 +5,20 @@ import com.factory.appsfactory.challenge.framework.db.dao.ArtistDao
 import com.factory.appsfactory.core.data.local.LocalAlbumDataSource
 import com.factory.appsfactory.core.domain.Album
 import com.factory.appsfactory.challenge.framework.db.models.Album as DbAlbum
+import com.factory.appsfactory.challenge.framework.db.models.Artist as DbArtist
 import com.factory.appsfactory.core.domain.AlbumDetails
 import com.factory.appsfactory.core.domain.Artist
 import com.factory.appsfactory.core.domain.Track
 import javax.inject.Inject
 
-class AlbumDataSourceImp @Inject constructor (
+class AlbumDataSourceImp @Inject constructor(
     private val albumDAO: AlbumDao,
     private val artistDao: ArtistDao
 ) : LocalAlbumDataSource {
 
-    override suspend fun addAlbum(album: Album, artist: Artist) {
-        takeIf { album.id.isNotEmpty() && artist.id.isNotEmpty() }?.apply {
-            albumDAO.addAlbum(
+    override suspend fun addAlbum(album: Album, artist: Artist): Boolean {
+        takeIf { album.id.isNotEmpty() && artist.id.isNotEmpty() }?.let {
+            val albumRecord = albumDAO.addAlbum(
                 DbAlbum(
                     album.id,
                     album.name,
@@ -27,7 +28,16 @@ class AlbumDataSourceImp @Inject constructor (
                     artist.id
                 )
             )
-        }
+            val artistRecord = artistDao.addArtist(
+                DbArtist(
+                    artist.id,
+                    artist.name,
+                    artist.url,
+                    artist.thumbnail
+                )
+            )
+            return albumRecord > 0 && artistRecord > 0
+        } ?: return false
     }
 
     override suspend fun getAlbums(): List<Album> {
@@ -46,9 +56,9 @@ class AlbumDataSourceImp @Inject constructor (
         return true
     }
 
-    override suspend fun removeAlbum(album: Album, artist: Artist) {
-        takeIf { artist.id.isNotEmpty() && album.id.isNotEmpty() }?.apply {
-            albumDAO.deleteAlbum(
+    override suspend fun removeAlbum(album: Album, artist: Artist): Boolean {
+        takeIf { artist.id.isNotEmpty() && album.id.isNotEmpty() }?.let {
+            val deleteCount = albumDAO.deleteAlbum(
                 DbAlbum(
                     album.id,
                     album.name,
@@ -58,7 +68,8 @@ class AlbumDataSourceImp @Inject constructor (
                     artist.id
                 )
             )
-        }
+            return deleteCount == 1
+        } ?: return false
     }
 
     override suspend fun updateAlbumTracks(album: Album, track: Track) {
@@ -68,13 +79,14 @@ class AlbumDataSourceImp @Inject constructor (
     override suspend fun getAlbumDetails(album: Album, artist: Artist): AlbumDetails? {
         // Verify if album contains mbid
         // if empty return null
-            // else
-                // Get all albums & get album id == album param id
-                    // Export artist id from album item
-                        // Get artist details
-                    // get album tracks
+        // else
+        // Get all albums & get album id == album param id
+        // Export artist id from album item
+        // Get artist details
+        // get album tracks
         return takeIf { album.id.isNotEmpty() }?.let {
             albumDAO.getAlbums().firstOrNull { it.ref == album.id }?.let { dbAlbum ->
+
                 val albumItem = Album(
                     dbAlbum.ref,
                     dbAlbum.name,
