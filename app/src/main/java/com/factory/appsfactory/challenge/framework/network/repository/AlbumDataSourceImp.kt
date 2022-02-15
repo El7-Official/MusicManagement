@@ -1,6 +1,5 @@
 package com.factory.appsfactory.challenge.framework.network.repository
 
-import android.util.Log
 import com.factory.appsfactory.challenge.framework.network.api.LastFMService
 import com.factory.appsfactory.core.data.remote.RemoteAlbumDataSource
 import com.factory.appsfactory.core.domain.Album
@@ -17,7 +16,6 @@ class AlbumDataSourceImp @Inject constructor(
     override suspend fun getAlbumsByArtist(artist: Artist): List<Album> {
         return takeIf { artist.name.isNotEmpty() }?.let {
             lastFMService.getArtistAlbums(artist.name).album.topAlbums.map {
-                Log.e("TAG_BASE", "getAlbumsByArtist - it: ${it.mbid}")
                 Album(
                     it.mbid ?: UUID.randomUUID().toString(),
                     it.name ?: "",
