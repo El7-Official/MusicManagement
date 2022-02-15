@@ -1,6 +1,7 @@
 package com.factory.appsfactory.challenge.ui.albumdetails
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -104,8 +105,9 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
             txtViewAlbumNameContent.text = albumDetails.album.name
             txtViewPlayCountContent.text = albumDetails.album.playCount.toString()
             txtViewLinkContent.text = albumDetails.album.url
+            Log.e("TAG_BASE", "matchDataToUI: ${albumDetails.tracks.size}")
             txtViewTrackContent.text =
-                albumDetails.tracks.takeIf { it.isEmpty() }?.joinToString(separator = " \t-\t ") {
+                albumDetails.tracks.takeIf { it.isNotEmpty() }?.joinToString(separator = " \t-\t ") {
                     it.name
                 } ?: ""
         }
