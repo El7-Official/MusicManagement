@@ -55,7 +55,6 @@ class TopAlbumsFragment : BaseFragment<FragmentTopAlbumsBinding, BaseViewModel>(
                 findNavController().navigate(
                     TopAlbumsFragmentDirections.actionTopAlbumsFragmentToAlbumDetailsFragment(
                         false,
-                        args.artist,
                         album
                     )
                 )

@@ -7,5 +7,5 @@ import com.factory.appsfactory.core.domain.Track
 
 interface AlbumDataSource {
     // Remote & Cache
-    suspend fun getAlbumDetails(album: Album, artist: Artist): AlbumDetails?
+    suspend fun getAlbumDetails(album: Album): AlbumDetails?
 }

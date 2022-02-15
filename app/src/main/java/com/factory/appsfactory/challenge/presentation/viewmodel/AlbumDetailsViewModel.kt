@@ -47,16 +47,16 @@ class AlbumDetailsViewModel @Inject constructor(
         _albumDetails.postValue(AlbumDetailsUIModel.Error(exception.message ?: "Error"))
     }
 
-    fun getAlbumDetails(fromCache: Boolean, artist: Artist, album: Album) {
+    fun getAlbumDetails(fromCache: Boolean, album: Album) {
         _albumDetails.postValue(AlbumDetailsUIModel.Loading)
         launchCoroutineIO {
-            loadAlbumDetails(fromCache, artist, album)
+            loadAlbumDetails(fromCache, album)
         }
     }
 
-    fun addAlbumInFavourite(album: Album, artist: Artist) {
+    fun addAlbumInFavourite(album: Album) {
         launchCoroutineIO {
-            saveAlbumUseCase(album, artist).let {
+            saveAlbumUseCase(album).let {
                 _albumDetails.postValue(
                     AlbumDetailsUIModel.FavoriteStatus(
                         Favorite.IN_FAVORITE,
@@ -67,9 +67,9 @@ class AlbumDetailsViewModel @Inject constructor(
         }
     }
 
-    fun removeAlbumFromFavourite(album: Album, artist: Artist) {
+    fun removeAlbumFromFavourite(albumId: String) {
         launchCoroutineIO {
-            deleteAlbumUseCase(album, artist).let {
+            deleteAlbumUseCase(albumId).let {
                 _albumDetails.postValue(
                     AlbumDetailsUIModel.FavoriteStatus(
                         Favorite.OUT_FAVOURITE,
@@ -80,13 +80,12 @@ class AlbumDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadAlbumDetails(fromCache: Boolean, artist: Artist, album: Album) {
+    private suspend fun loadAlbumDetails(fromCache: Boolean, album: Album) {
         _albumDetails.postValue(
             AlbumDetailsUIModel.Success(
                 getAlbumDetailsUseCase(
                     fromCache,
-                    album,
-                    artist
+                    album
                 )
             )
         )

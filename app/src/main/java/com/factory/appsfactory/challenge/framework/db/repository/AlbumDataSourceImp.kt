@@ -1,11 +1,9 @@
 package com.factory.appsfactory.challenge.framework.db.repository
 
 import com.factory.appsfactory.challenge.framework.db.dao.AlbumDao
-import com.factory.appsfactory.challenge.framework.db.dao.ArtistDao
 import com.factory.appsfactory.core.data.local.LocalAlbumDataSource
 import com.factory.appsfactory.core.domain.Album
 import com.factory.appsfactory.challenge.framework.db.models.Album as DbAlbum
-import com.factory.appsfactory.challenge.framework.db.models.Artist as DbArtist
 import com.factory.appsfactory.core.domain.AlbumDetails
 import com.factory.appsfactory.core.domain.Artist
 import com.factory.appsfactory.core.domain.Track
@@ -13,11 +11,10 @@ import javax.inject.Inject
 
 class AlbumDataSourceImp @Inject constructor(
     private val albumDAO: AlbumDao,
-    private val artistDao: ArtistDao
 ) : LocalAlbumDataSource {
 
-    override suspend fun addAlbum(album: Album, artist: Artist): Boolean {
-        takeIf { album.id.isNotEmpty() && artist.id.isNotEmpty() }?.let {
+    override suspend fun addAlbum(album: Album): Boolean {
+        takeIf { album.id.isNotEmpty() }?.let {
             val albumRecord = albumDAO.addAlbum(
                 DbAlbum(
                     album.id,
@@ -26,18 +23,10 @@ class AlbumDataSourceImp @Inject constructor(
                     album.thumbnail,
                     true,
                     album.playCount,
-                    artist.id
+                    album.artistName
                 )
             )
-            val artistRecord = artistDao.addArtist(
-                DbArtist(
-                    artist.id,
-                    artist.name,
-                    artist.url,
-                    artist.thumbnail
-                )
-            )
-            return albumRecord > 0 && artistRecord > 0
+            return albumRecord > 0
         } ?: return false
     }
 
@@ -49,7 +38,8 @@ class AlbumDataSourceImp @Inject constructor(
                 it.url,
                 it.thumbnail,
                 it.playCount,
-                it.isOnCache
+                it.isOnCache,
+                it.artistName
             )
         } ?: emptyList()
     }
@@ -58,20 +48,12 @@ class AlbumDataSourceImp @Inject constructor(
         return true
     }
 
-    override suspend fun removeAlbum(album: Album, artist: Artist): Boolean {
-        takeIf { artist.id.isNotEmpty() && album.id.isNotEmpty() }?.let {
-            val deleteCount = albumDAO.deleteAlbum(
-                DbAlbum(
-                    album.id,
-                    album.name,
-                    album.url,
-                    album.thumbnail,
-                    album.isOnCache,
-                    album.playCount,
-                    artist.id
-                )
-            )
-            return deleteCount == 1
+    override suspend fun removeAlbum(albumId: String): Boolean {
+        takeIf { albumId.isNotEmpty() }?.let {
+            albumDAO.getAlbums().firstOrNull { album -> album.ref == albumId }?.let {
+                val deleteCount = albumDAO.deleteAlbum(it)
+                return deleteCount == 1
+            }
         } ?: return false
     }
 
@@ -79,7 +61,7 @@ class AlbumDataSourceImp @Inject constructor(
 
     }
 
-    override suspend fun getAlbumDetails(album: Album, artist: Artist): AlbumDetails? {
+    override suspend fun getAlbumDetails(album: Album): AlbumDetails? {
         return takeIf { album.id.isNotEmpty() }?.let {
             albumDAO.getAlbums().firstOrNull { it.ref == album.id }?.let { dbAlbum ->
 
@@ -89,17 +71,9 @@ class AlbumDataSourceImp @Inject constructor(
                     dbAlbum.url,
                     dbAlbum.thumbnail,
                     dbAlbum.playCount,
-                    dbAlbum.isOnCache
+                    dbAlbum.isOnCache,
+                    dbAlbum.artistName
                 )
-                val dbArtistItem = artistDao.getArtistByRef(dbAlbum.artistId)
-                val artistItem = with(dbArtistItem) {
-                    Artist(
-                        this?.ref ?: dbAlbum.artistId,
-                        this?.name ?: "",
-                        this?.url ?: "",
-                        this?.thumbnail ?: ""
-                    )
-                }
                 val tracks = albumDAO.getAlbumWithTracks(albumItem.id)?.tracks?.map { dbTrack ->
                     Track(
                         dbTrack.name,
@@ -107,7 +81,7 @@ class AlbumDataSourceImp @Inject constructor(
                         dbTrack.duration
                     )
                 } ?: emptyList()
-                AlbumDetails(albumItem, artistItem, tracks)
+                AlbumDetails(albumItem, tracks)
             }
         }
     }

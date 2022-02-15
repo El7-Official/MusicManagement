@@ -7,7 +7,7 @@ import com.factory.appsfactory.challenge.framework.db.models.ArtistWithAlbums
 @Dao
 interface ArtistDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addArtist(artist: Artist): Long
 
     @Query("SELECT * FROM artists WHERE ref=:ref")
@@ -15,5 +15,5 @@ interface ArtistDao {
 
     @Transaction
     @Query("SELECT * FROM artists WHERE ref=:ref")
-    fun getArtistWithAlbums(ref: String): ArtistWithAlbums?
+    fun getArtistWithAlbums(ref: String): ArtistWithAlbums?*/
 }

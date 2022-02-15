@@ -49,25 +49,19 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
 
     private fun fetchData(args: AlbumDetailsFragmentArgs) {
         args.album?.let { album ->
-            args.artist?.let { artist ->
-                viewModel.getAlbumDetails(args.fromCache, artist, album)
-            }
+            viewModel.getAlbumDetails(args.fromCache, album)
         } ?: handleEmptyData()
     }
 
     private fun handleAddAlbum(args: AlbumDetailsFragmentArgs) {
-        args.artist?.let { artist ->
-            args.album?.let { album ->
-                viewModel.addAlbumInFavourite(album, artist)
-            }
+        args.album?.let { album ->
+            viewModel.addAlbumInFavourite(album)
         }
     }
 
     private fun handleDeleteAlbum(args: AlbumDetailsFragmentArgs) {
-        args.artist?.let { artist ->
-            args.album?.let { album ->
-                viewModel.removeAlbumFromFavourite(album, artist)
-            }
+        args.album?.let { album ->
+            viewModel.removeAlbumFromFavourite(album.id)
         }
     }
 
@@ -106,7 +100,7 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
     private fun matchDataToUI(albumDetails: AlbumDetails) {
         with(binding.includeItemDetails) {
             checkboxFavourite.isChecked = albumDetails.album.isOnCache
-            txtViewArtistName.text = albumDetails.artist.name
+            txtViewArtistName.text = albumDetails.album.artistName
             txtViewAlbumNameContent.text = albumDetails.album.name
             txtViewPlayCountContent.text = albumDetails.album.playCount.toString()
             txtViewLinkLabel.text = albumDetails.album.url

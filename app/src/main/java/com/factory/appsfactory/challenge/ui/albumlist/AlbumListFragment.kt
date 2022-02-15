@@ -3,7 +3,6 @@ package com.factory.appsfactory.challenge.ui.albumlist
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.factory.appsfactory.challenge.databinding.FragmentAlbumListBinding
@@ -12,7 +11,6 @@ import com.factory.appsfactory.challenge.presentation.viewmodel.AlbumListUIModel
 import com.factory.appsfactory.challenge.presentation.viewmodel.AlbumListViewModel
 import com.factory.appsfactory.challenge.presentation.viewmodel.BaseViewModel
 import com.factory.appsfactory.challenge.ui.base.BaseFragment
-import com.factory.appsfactory.core.domain.Artist
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -55,7 +53,6 @@ class AlbumListFragment : BaseFragment<FragmentAlbumListBinding, BaseViewModel>(
             findNavController().navigate(
                 AlbumListFragmentDirections.actionAlbumListFragmentToAlbumDetailsFragment(
                     true,
-                    Artist("", "", "", ""),
                     album
                 )
             )
@@ -63,13 +60,12 @@ class AlbumListFragment : BaseFragment<FragmentAlbumListBinding, BaseViewModel>(
     }
 
     private fun setUIListener() {
-        binding.searchViewArtist.apply {
-            setIconifiedByDefault(false)
-            setOnClickListener {
-                if (this.query.toString().isNotEmpty()) {
+        binding.btnSearch.setOnClickListener {
+            binding.txtInputEditTxtSearchArtist.text.toString().apply {
+                if (this.isNotEmpty()) {
                     findNavController().navigate(
                         AlbumListFragmentDirections.actionAlbumListFragmentToArtistListFragment(
-                            this.query.toString()
+                            this
                         )
                     )
                 }

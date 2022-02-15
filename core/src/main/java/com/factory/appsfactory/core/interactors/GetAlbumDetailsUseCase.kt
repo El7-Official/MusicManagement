@@ -7,7 +7,7 @@ import com.factory.appsfactory.core.domain.Artist
 import javax.inject.Inject
 
 class GetAlbumDetailsUseCase @Inject constructor(private val albumRepository: AlbumRepository) {
-    suspend operator fun invoke(fromCache: Boolean, album: Album, artist: Artist): AlbumDetails? {
-        return albumRepository.getAlbumDetails(fromCache, album, artist)
+    suspend operator fun invoke(fromCache: Boolean, album: Album): AlbumDetails? {
+        return albumRepository.getAlbumDetails(fromCache, album)
     }
 }

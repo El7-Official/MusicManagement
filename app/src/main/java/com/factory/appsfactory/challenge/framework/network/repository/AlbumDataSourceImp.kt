@@ -21,15 +21,16 @@ class AlbumDataSourceImp @Inject constructor(
                     it.name ?: "",
                     it.url ?: "",
                     "",
-                    it.playcount ?: 0
+                    it.playcount ?: 0,
+                    artistName = artist.name
                 )
             }
         } ?: emptyList()
     }
 
-    override suspend fun getAlbumDetails(album: Album, artist: Artist): AlbumDetails? {
-        return takeIf { album.name.isNotEmpty() && artist.name.isNotEmpty() }?.let {
-            with(lastFMService.getAlbumDetails(artist.name, album.name).albumInfo) {
+    override suspend fun getAlbumDetails(album: Album): AlbumDetails? {
+        return takeIf { album.name.isNotEmpty()  }?.let {
+            with(lastFMService.getAlbumDetails(album.artistName, album.name).albumInfo) {
                 val trackList = this.trackResponseModel?.trackList?.map {
                     Track(
                         it.name,
@@ -42,11 +43,11 @@ class AlbumDataSourceImp @Inject constructor(
                     if (this.albumName.isEmpty()) album.name else this.albumName,
                     if (this.url.isEmpty()) album.url else this.url,
                     "",
-                    if (this.playCount == 0L) album.playCount else this.playCount
+                    if (this.playCount == 0L) album.playCount else this.playCount,
+                    artistName = if (this.artistName.isEmpty()) album.artistName else this.artistName
                 )
                 AlbumDetails(
                     albumItem,
-                    artist,
                     trackList
                 )
             }

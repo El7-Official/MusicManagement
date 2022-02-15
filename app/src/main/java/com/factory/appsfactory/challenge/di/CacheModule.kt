@@ -19,12 +19,6 @@ object CacheModule {
 
     @Provides
     @Singleton
-    fun provideArtistDao(lastFMDatabase: LastFMDatabase): ArtistDao {
-        return lastFMDatabase.artistDao()
-    }
-
-    @Provides
-    @Singleton
     fun provideAlbumDao(lastFMDatabase: LastFMDatabase): AlbumDao {
         return lastFMDatabase.albumDao()
     }
