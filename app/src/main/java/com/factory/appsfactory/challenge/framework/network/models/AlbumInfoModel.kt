@@ -14,7 +14,7 @@ data class AlbumInfoModel(
     @SerializedName("image")
     val imageList: List<ImageModel>,
     @SerializedName("tracks")
-    val trackList: List<TrackModel>?,
+    val trackResponseModel: TrackResponseModel?,
     @SerializedName("url")
     val url: String,
 )

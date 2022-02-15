@@ -32,7 +32,7 @@ class AlbumDataSourceImp @Inject constructor(
     override suspend fun getAlbumDetails(album: Album, artist: Artist): AlbumDetails? {
         return takeIf { album.name.isNotEmpty() && artist.name.isNotEmpty() }?.let {
             with(lastFMService.getAlbumDetails(artist.name, album.name).albumInfo) {
-                val trackList = this.trackList?.map {
+                val trackList = this.trackResponseModel?.trackList?.map {
                     Track(
                         it.name,
                         it.url,
