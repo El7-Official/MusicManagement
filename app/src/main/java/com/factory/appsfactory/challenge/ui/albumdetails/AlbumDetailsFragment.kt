@@ -103,10 +103,11 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
             txtViewArtistName.text = albumDetails.album.artistName
             txtViewAlbumNameContent.text = albumDetails.album.name
             txtViewPlayCountContent.text = albumDetails.album.playCount.toString()
-            txtViewLinkLabel.text = albumDetails.album.url
+            txtViewLinkContent.text = albumDetails.album.url
             txtViewTrackContent.text =
-                albumDetails.tracks.takeIf { it.isNotEmpty() }?.joinToString(separator = " \t-\t ")
-                    ?: ""
+                albumDetails.tracks.takeIf { it.isEmpty() }?.joinToString(separator = " \t-\t ") {
+                    it.name
+                } ?: ""
         }
     }
 

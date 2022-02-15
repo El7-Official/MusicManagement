@@ -33,6 +33,7 @@ class TopAlbumsAdapter : BaseAdapter<Album>() {
         RecyclerView.ViewHolder(binding.root), Binder<Album> {
         override fun bind(item: Album) {
             binding.apply {
+                txtViewArtistName.text = item.artistName
                 txtViewAlbumName.text = item.name
                 root.setOnClickListener {
                     onItemClickListener?.let { itemClick ->

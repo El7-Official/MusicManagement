@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:cardElevation="1dp"
+    app:cardCornerRadius="3dp"
+    android:background="#FCFCFC">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_view_decorator"
-        android:layout_width="200sp"
-        android:layout_height="200dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginTop="16dp"
-        app:cornerFamily="rounded"
-        app:cornerSize="10%"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_album"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +27,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:buttonTint="@color/purple"/>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view_container"
@@ -45,96 +49,101 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txt_view_artist_name"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="25dp"
-                android:textAppearance="?attr/textAppearanceHeadline3"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/geroma_semibold"
+                android:gravity="center|start"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_view_album_name_content"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Artist name" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txt_view_album_name_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/album_details_album_name_hint"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_view_artist_name"
-                app:layout_constraintWidth_percent=".5" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txt_view_play_count_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/album_details_album_playcount_hint"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_view_artist_name"
-                app:layout_constraintWidth_percent=".5" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txt_view_album_name_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/ic_heart"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/purple"
+                android:ellipsize="end"
+                android:fontFamily="@font/geroma_semibold"
+                android:gravity="center|start"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_view_play_count_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_view_album_name_label"
-                app:layout_constraintWidth_percent=".5"
+                app:layout_constraintTop_toBottomOf="@+id/txt_view_artist_name"
                 tools:text="Je défendrais ma vie" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txt_view_play_count_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:drawableStart="@drawable/ic_play"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/purple"
+                android:ellipsize="end"
+                android:fontFamily="@font/geroma_regular"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_view_track_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_view_play_count_label"
-                app:layout_constraintWidth_percent=".5"
-                tools:text="42526" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txt_view_link_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/album_details_album_url_hint"
-                android:textAppearance="?attr/textAppearanceBody1"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_view_album_name_content"
-                app:layout_constraintWidth_percent=".5" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txt_view_tracks_hint"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/album_details_album_tracks_hint"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_view_play_count_content"
-                app:layout_constraintWidth_percent=".5" />
+                tools:text="42526" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txt_view_link_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/geroma_regular"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_view_link_label"
-                app:layout_constraintWidth_percent=".5"
+                app:layout_constraintTop_toBottomOf="@+id/txt_view_track_content"
                 tools:text="https://base.com" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/txt_view_track_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/geroma_regular"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_view_link_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_view_tracks_hint"
-                app:layout_constraintWidth_percent=".5"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_view_play_count_content"
                 tools:text="[Track 1 - Track 2 - Track 3]" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
