@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.factory.appsfactory.challenge.presentation.extensions.showSnackBar
 import com.factory.appsfactory.challenge.presentation.viewmodel.BaseViewModel
+import com.factory.appsfactory.challenge.ui.utils.dismissLoadingDialog
+import com.factory.appsfactory.challenge.ui.utils.showLoadingDialog
 
 abstract class BaseFragment<VB : ViewBinding, ViewModel : BaseViewModel> : Fragment() {
 
@@ -31,10 +34,12 @@ abstract class BaseFragment<VB : ViewBinding, ViewModel : BaseViewModel> : Fragm
     }
 
     protected open fun handleLoading(isLoading: Boolean) {
-
+        if (isLoading) showLoadingDialog() else dismissLoadingDialog()
     }
 
     protected open fun handleErrorMessage(message: String?) {
-
+        if (message.isNullOrBlank()) return
+        dismissLoadingDialog()
+        showSnackBar(binding.root, message)
     }
 }
