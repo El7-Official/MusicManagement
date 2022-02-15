@@ -24,6 +24,7 @@ class AlbumDataSourceImp @Inject constructor(
                     album.name,
                     album.url,
                     album.thumbnail,
+                    true,
                     album.playCount,
                     artist.id
                 )
@@ -47,7 +48,8 @@ class AlbumDataSourceImp @Inject constructor(
                 it.name,
                 it.url,
                 it.thumbnail,
-                it.playCount
+                it.playCount,
+                it.isOnCache
             )
         } ?: emptyList()
     }
@@ -64,6 +66,7 @@ class AlbumDataSourceImp @Inject constructor(
                     album.name,
                     album.url,
                     album.thumbnail,
+                    album.isOnCache,
                     album.playCount,
                     artist.id
                 )
@@ -77,13 +80,6 @@ class AlbumDataSourceImp @Inject constructor(
     }
 
     override suspend fun getAlbumDetails(album: Album, artist: Artist): AlbumDetails? {
-        // Verify if album contains mbid
-        // if empty return null
-        // else
-        // Get all albums & get album id == album param id
-        // Export artist id from album item
-        // Get artist details
-        // get album tracks
         return takeIf { album.id.isNotEmpty() }?.let {
             albumDAO.getAlbums().firstOrNull { it.ref == album.id }?.let { dbAlbum ->
 
@@ -92,9 +88,10 @@ class AlbumDataSourceImp @Inject constructor(
                     dbAlbum.name,
                     dbAlbum.url,
                     dbAlbum.thumbnail,
-                    dbAlbum.playCount
+                    dbAlbum.playCount,
+                    dbAlbum.isOnCache
                 )
-                val dbArtistItem = artistDao.getArtistByRef(dbAlbum.ref)
+                val dbArtistItem = artistDao.getArtistByRef(dbAlbum.artistId)
                 val artistItem = with(dbArtistItem) {
                     Artist(
                         this?.ref ?: dbAlbum.artistId,

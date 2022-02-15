@@ -7,5 +7,6 @@ data class Album(
     val name: String,
     val url: String,
     val thumbnail: String,
-    val playCount: Long
+    val playCount: Long,
+    val isOnCache: Boolean = false
 ): Serializable

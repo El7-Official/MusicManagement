@@ -35,6 +35,9 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
 
     private fun setUIListener() {
         binding.includeItemDetails.checkboxFavourite.setOnCheckedChangeListener { view, isChecked ->
+            if (!binding.includeItemDetails.checkboxFavourite.isPressed) {
+                return@setOnCheckedChangeListener
+            }
             if (isChecked) handleAddAlbum(args)
             else handleDeleteAlbum(args)
         }
@@ -102,6 +105,7 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, BaseViewM
 
     private fun matchDataToUI(albumDetails: AlbumDetails) {
         with(binding.includeItemDetails) {
+            checkboxFavourite.isChecked = albumDetails.album.isOnCache
             txtViewArtistName.text = albumDetails.artist.name
             txtViewAlbumNameContent.text = albumDetails.album.name
             txtViewPlayCountContent.text = albumDetails.album.playCount.toString()

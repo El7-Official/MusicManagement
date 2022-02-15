@@ -12,6 +12,7 @@ class Album(
     val name: String,
     val url: String,
     val thumbnail: String,
+    @ColumnInfo(name = "is_on_cache") val isOnCache: Boolean,
     @ColumnInfo(name = "play_count") val playCount: Long,
     @ColumnInfo(name = "artist_id") val artistId: String
 )
